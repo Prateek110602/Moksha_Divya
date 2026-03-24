@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moksha Invite</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { transition: background 1s ease; }
+
+    .dark-bg {
+      background: #2b2118;
+    }
+
+    .door {
+      width: 200px;
+      height: 320px;
+      background: #6b4f3a;
+      border-radius: 10px;
+      position: relative;
+      cursor: pointer;
+      transform-origin: left;
+      transition: transform 1s ease-in-out;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .door.open {
+      transform: perspective(1000px) rotateY(-100deg);
+    }
+
+    .knob {
+      width: 15px;
+      height: 15px;
+      background: #d6c3b3;
+      border-radius: 50%;
+      position: absolute;
+      right: 15px;
+      top: 50%;
+    }
+
+    .fade-in {
+      animation: fadeIn 1.5s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#f5efe6] via-[#e8dccf] to-[#d6c3b3] flex items-center justify-center p-6 text-center">
+
+<div id="app" class="w-full max-w-2xl"></div>
+
+<script>
+let doorOpened = false;
+let showMessage = false;
+let response = null;
+let noClicks = 0;
+
+function render() {
+  const yesScale = 1 + noClicks * 0.2;
+  const hideNo = noClicks >= 5;
+
+  document.getElementById("app").innerHTML = `
+
+    ${!doorOpened ? `
+      <div class="flex flex-col items-center gap-6">
+        <div onclick="openDoor()" class="door ${doorOpened ? "open" : ""}">
+          <div class="knob"></div>
+        </div>
+        <p class="text-[#5c4a38]">Tap the door 🚪</p>
+      </div>
+    ` : `
+
+      <div class="fade-in">
+        <h1 class="text-4xl md:text-6xl font-bold text-[#4b3b2a] mb-4">
+          Heyyyy Mrignaini!!!
+        </h1>
+
+        <p class="text-lg text-[#5c4a38] mb-6">
+          We met at Moksha on <b>19th & 20th April 2025</b>… and somehow that turned into *this* ✨
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+          <div class="bg-[#fdfaf6] rounded-2xl shadow-lg p-4">
+            <p class="font-semibold mb-2 text-[#4b3b2a]">The day we met</p>
+            <img src="images/first.jpg" class="rounded-xl" />
+          </div>
+
+          <div class="bg-[#fdfaf6] rounded-2xl shadow-lg p-4">
+            <p class="font-semibold mb-2 text-[#4b3b2a]">Us now</p>
+            <img src="images/now.jpg" class="rounded-xl" />
+          </div>
+        </div>
+
+        <div class="bg-[#fdfaf6] rounded-2xl shadow-lg p-6 mb-8">
+          <p class="text-xl text-[#4b3b2a]">Moksha 2026</p>
+          <div class="h-40 flex items-center justify-center text-5xl text-[#a89a8a] border-2 border-dashed rounded-xl">?</div>
+        </div>
+
+        ${!showMessage ? `
+          <button onclick="reveal()" class="bg-[#6b4f3a] text-white px-6 py-3 rounded-2xl text-lg">
+            Tap to Reveal
+          </button>
+        ` : `
+          <div class="bg-[#fdfaf6] rounded-2xl shadow-lg p-6">
+            <p class="text-lg text-[#5c4a38] mb-6">
+              Ready for another guilt trip<br/><br/>
+              Let’s go back where it all started<br/>
+              Moksha 2026 — <b>28th & 29th March</b><br/><br/>
+              Will you come with me?
+            </p>
+
+            ${!response ? `
+              <div class="flex gap-4 justify-center items-center">
+                <button onclick="sayYes()" style="transform: scale(${yesScale})" class="bg-[#4b3b2a] text-white px-6 py-2 rounded-xl">
+                  Yes
+                </button>
+
+                ${!hideNo ? `
+                  <button onclick="clickNo()" class="bg-[#a89a8a] text-white px-6 py-2 rounded-xl">
+                    No
+                  </button>
+                ` : ""}
+              </div>
+            ` : `
+              <div class="mt-6">
+                <p class="text-2xl font-semibold text-[#4b3b2a]">YAAAYYYY!!! 🎉</p>
+                <p class="text-[#5c4a38] mt-2">See you at Moksha 2026 💫</p>
+              </div>
+            `}
+          </div>
+        `}
+      </div>
+
+    `}
+  `;
+}
+
+function openDoor() {
+  document.body.classList.add('dark-bg');
+
+  const door = document.querySelector('.door');
+  door.classList.add('open');
+
+  setTimeout(() => {
+    doorOpened = true;
+    document.body.classList.remove('dark-bg');
+    render();
+  }, 1000);
+}
+
+function reveal() {
+  showMessage = true;
+  render();
+}
+
+function sayYes() {
+  response = "yes";
+  render();
+}
+
+function clickNo() {
+  noClicks++;
+  render();
+}
+
+render();
+</script>
+
+</body>
+</html>
